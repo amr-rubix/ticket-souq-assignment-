@@ -5,7 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["omitApi"]
 }
 
 datasource db {
@@ -20,7 +21,16 @@ model User {
 
   email String @unique
   hash  String
+  role  Role   @default(USER)
+
+  isVerified  Boolean @default(false)
+  verify_code String?
 
   firstName String?
   lastName  String?
+}
+
+enum Role {
+  USER
+  ADMIN
 }

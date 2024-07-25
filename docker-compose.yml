@@ -9,3 +9,10 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
       POSTGRES_DB: nest
+    depends_on:
+      - redis
+    env_file: .env
+  redis:
+    image: 'redis:alpine'
+    ports:
+      - 6379:${REDIS_PORT}

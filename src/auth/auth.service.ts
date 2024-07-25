@@ -1,60 +1,49 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthDto } from './dto';
-import * as argon from 'argon2';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import { UserService } from 'src/user/user.service';
+
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private jwt: JwtService,
+    private config: ConfigService,
+    private userService: UserService,
+  ) {}
   async signup(dto: AuthDto) {
-    //generate the password hash
-    const hash = await argon.hash(dto.password);
-
-    try {
-      //save the new user in the db
-      const user = await this.prisma.user.create({
-        data: {
-          email: dto.email,
-          hash,
-        },
-      });
-
-      //hide user hash
-      delete user.hash;
-
-      return user;
-    } catch (error) {
-      if (error instanceof PrismaClientKnownRequestError) {
-        //unique field valioation
-        if (error.code === 'P2002') {
-          throw new ForbiddenException('Email is already taken');
-        }
-      }
-    }
+    const user = await this.userService.signup(dto);
+    return this.signToken(user.id, user.email, user.role);
   }
 
   async signin(dto: AuthDto) {
-    //find the user by email
-    const user = await this.prisma.user.findUnique({
-      where: {
-        email: dto.email,
-      },
+    const user = await this.userService.login(dto);
+
+    //return jwt token signed
+    return this.signToken(user.id, user.email, user.role);
+  }
+
+  async signToken(
+    userId: number,
+    email: string,
+    role: string,
+  ): Promise<{ access_token: string }> {
+    const payload = {
+      id: userId,
+      email,
+      role,
+    };
+
+    //generate signed token with user info
+    const token = await this.jwt.signAsync(payload, {
+      secret: this.config.get('JWT_SECRET'),
+      expiresIn: '15m',
     });
 
-    //if user does not exist throw exception
-    if (!user) {
-      throw new ForbiddenException('Credentials Incorrect');
-    }
-
-    //compare password
-    //if password incorrect throw exception
-    const comparePassword = await argon.verify(user.hash, dto.password);
-    if (!comparePassword) {
-      throw new ForbiddenException('Credentials Incorrect');
-    }
-
-    //send back user without hash
-    delete user.hash;
-    return user;
+    return {
+      access_token: token,
+    };
   }
 }
