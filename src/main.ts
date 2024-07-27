@@ -9,6 +9,11 @@ async function bootstrap() {
       whitelist: true, //filter extra data on requests
     }),
   );
+  /**
+   * Todo: add fronturl
+   */
+  app.enableCors();
+
   await app.listen(3333);
 }
 bootstrap();

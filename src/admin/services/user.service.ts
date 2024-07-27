@@ -8,13 +8,17 @@ import {
 import * as argon from 'argon2';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { uid } from 'uid';
-import { User } from '@prisma/client';
-
+import { User } from 'src/user/types/user.type';
+import { UserCreatePayload } from '../types/admin.type';
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll() {
+  /**
+   * get all users
+   * @returns [Users]
+   */
+  async findAll(): Promise<Array<User>> {
     return this.prisma.user.findMany({
       omit: {
         hash: true,
@@ -22,9 +26,16 @@ export class UserService {
     });
   }
 
-  async create(payload) {
+  /**
+   * create new user
+   * @param payload UserCreatePayload
+   * @returns
+   */
+  async create(payload: UserCreatePayload): Promise<User> {
     try {
+      //hash password
       const hash = await argon.hash(payload.password);
+
       //save the new user in the db
       delete payload.password;
       const user = await this.prisma.user.create({
@@ -53,6 +64,11 @@ export class UserService {
     }
   }
 
+  /**
+   * find user by id
+   * @param id number
+   * @returns user User
+   */
   async findOne(id: number): Promise<User> {
     try {
       return await this.prisma.user.findUnique({
@@ -64,7 +80,14 @@ export class UserService {
       throw new NotFoundException('User not found');
     }
   }
-  async update(id, payload) {
+
+  /**
+   * update user by id
+   * @param id
+   * @param payload
+   * @returns
+   */
+  async update(id, payload): Promise<User> {
     try {
       const user = await this.prisma.user.findUnique({
         where: {
@@ -88,7 +111,12 @@ export class UserService {
     }
   }
 
-  async remove(id) {
+  /**
+   * remove user by id
+   * @param id number
+   * @returns user User
+   */
+  async remove(id: number): Promise<User> {
     try {
       return await this.prisma.user.delete({
         where: {
