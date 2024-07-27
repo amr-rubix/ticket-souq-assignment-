@@ -1,17 +1,9 @@
-import DataTable, { TableColumn } from 'react-data-table-component';
+import DataTable from 'react-data-table-component';
 import Link from 'next/link';
-type DataRow = {
-  email: string;
-  id: number;
-  firstName: string;
-  lastName: string;
-  isVerified: boolean;
-  role: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
-const columns: TableColumn<DataRow>[] = [
+import { useState } from 'react';
+import { DataRow } from './types';
+import { TableColumn } from 'react-data-table-component';
+export const columns: TableColumn<DataRow>[] = [
   {
     name: 'Id',
     selector: (row) => row.id,
@@ -54,6 +46,7 @@ const columns: TableColumn<DataRow>[] = [
   },
 ];
 const UsersCard = ({ usersData }) => {
+  const [users] = useState(usersData?.data || []);
   return (
     <>
       <section className="relative z-10 overflow-hidden pb-16 pt-36 md:pb-20 lg:pb-28 lg:pt-[180px]">
@@ -64,12 +57,7 @@ const UsersCard = ({ usersData }) => {
           >
             Add New User
           </Link>
-          <DataTable
-            title="Users"
-            pagination
-            columns={columns}
-            data={usersData}
-          />
+          <DataTable title="Users" pagination columns={columns} data={users} />
         </div>
       </section>
     </>

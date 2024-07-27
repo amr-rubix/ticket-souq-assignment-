@@ -1,22 +1,17 @@
 'use client';
 import { useState } from 'react';
 const AdminProfileCard = ({ userData, save }) => {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState();
-  const [lastName, setLastName] = useState('');
-  const [role, setRole] = useState('');
-  const [isVerified, setIsVerified] = useState(false);
+  const [user, setUser] = useState(userData?.data || null);
 
+  function handleChange(attr, val) {
+    const copy = {
+      ...user,
+    };
+    copy[attr] = val;
+    setUser(copy);
+  }
   function handleSave() {
-    save({
-      email,
-      firstName,
-      lastName,
-      role,
-      password,
-      isVerified,
-    });
+    save(user);
   }
   return (
     <>
@@ -26,7 +21,7 @@ const AdminProfileCard = ({ userData, save }) => {
             <div className="w-full px-4">
               <div className="shadow-three mx-auto max-w-[500px] rounded bg-white px-6 py-10 dark:bg-dark sm:p-[60px]">
                 <h3 className="mb-3 text-2xl font-bold text-black dark:text-white sm:text-3xl">
-                  {email}
+                  {user.email}
                 </h3>
                 <div className="mb-8 flex items-center justify-center"></div>
                 <div className="mb-8">
@@ -39,25 +34,25 @@ const AdminProfileCard = ({ userData, save }) => {
                   <input
                     type="email"
                     name="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={user.email}
+                    disabled
                     placeholder="Enter your Email"
                     className="border-stroke dark:text-body-color-dark dark:shadow-two w-full rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:focus:border-primary dark:focus:shadow-none"
                   />
                 </div>
                 <div className="mb-8">
                   <label
-                    htmlFor="email"
+                    htmlFor="password"
                     className="mb-3 block text-sm text-dark dark:text-white"
                   >
-                    Email
+                    Password
                   </label>
                   <input
                     type="password"
                     name="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter your Password"
+                    value={user.password}
+                    onChange={(e) => handleChange('password', e.target.value)}
+                    placeholder="Change your Password"
                     className="border-stroke dark:text-body-color-dark dark:shadow-two w-full rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:focus:border-primary dark:focus:shadow-none"
                   />
                 </div>
@@ -71,8 +66,8 @@ const AdminProfileCard = ({ userData, save }) => {
                   <input
                     type="firstName"
                     name="firstName"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
+                    value={user.firstName}
+                    onChange={(e) => handleChange('firstName', e.target.value)}
                     placeholder="Enter your First Name"
                     className="border-stroke dark:text-body-color-dark dark:shadow-two w-full rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:focus:border-primary dark:focus:shadow-none"
                   />
@@ -87,8 +82,8 @@ const AdminProfileCard = ({ userData, save }) => {
                   <input
                     type="lastName"
                     name="lastName"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
+                    value={user.lastName}
+                    onChange={(e) => handleChange('lastName', e.target.value)}
                     placeholder="Enter your Last Name"
                     className="border-stroke dark:text-body-color-dark dark:shadow-two w-full rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:focus:border-primary dark:focus:shadow-none"
                   />
@@ -103,8 +98,8 @@ const AdminProfileCard = ({ userData, save }) => {
                   <select
                     className="border-stroke dark:text-body-color-dark dark:shadow-two w-full rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:focus:border-primary dark:focus:shadow-none"
                     name="role"
-                    value={role}
-                    onChange={(e) => setRole(e.target.value)}
+                    value={user.role}
+                    onChange={(e) => handleChange('role', e.target.value)}
                   >
                     <option value="USER">USER</option>
                     <option value="ADMIN">ADMIN</option>
@@ -121,13 +116,15 @@ const AdminProfileCard = ({ userData, save }) => {
                     type="checkbox"
                     className="border-stroke dark:text-body-color-dark dark:shadow-two w-full rounded-sm border bg-[#f8f8f8] px-6 py-3 text-base text-body-color outline-none transition-all duration-300 focus:border-primary dark:border-transparent dark:bg-[#2C303B] dark:focus:border-primary dark:focus:shadow-none"
                     name="isVerified"
-                    checked={isVerified}
-                    onChange={() => setIsVerified(!isVerified)}
+                    checked={user.isVerified}
+                    onChange={() =>
+                      handleChange('isVerified', !user.isVerified)
+                    }
                   />
                 </div>
                 <div className="mb-6">
                   <button
-                    onClick={() => handleSave}
+                    onClick={handleSave}
                     className="shadow-submit dark:shadow-submit-dark flex w-full items-center justify-center rounded-sm bg-primary px-9 py-4 text-base font-medium text-white duration-300 hover:bg-primary/90"
                   >
                     Save

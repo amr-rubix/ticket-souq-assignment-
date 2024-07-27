@@ -13,7 +13,8 @@ const AdminUserPage = async () => {
   const { id } = useParams<{ id }>();
   const userData: any = await getUserData(id);
   const handleSave = async (data) => {
-    await adminService.post(data);
+    delete data.email;
+    await adminService.patch(data);
   };
   return (
     <>

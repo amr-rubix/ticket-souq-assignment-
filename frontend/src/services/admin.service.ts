@@ -41,4 +41,15 @@ export class AdminService extends AxiosService {
       return false;
     }
   }
+
+  public async patch(data) {
+    try {
+      return await this.instance.patch('/' + data.id, data);
+    } catch (error) {
+      /**
+       * todo: handle validation errors
+       */
+      return false;
+    }
+  }
 }

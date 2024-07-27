@@ -10,11 +10,7 @@ const getUsersData = async () => {
 
 const AdminPage = async () => {
   const usersData: any = await getUsersData();
-  return (
-    <>
-      <UsersCard usersData={usersData} />
-    </>
-  );
+  return <>{usersData && <UsersCard usersData={usersData} />}</>;
 };
 
 export default AdminPage;
