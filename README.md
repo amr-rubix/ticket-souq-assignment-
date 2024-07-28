@@ -1,6 +1,6 @@
 # Project Title
 
-TicketSouq Assignment
+Ticket Souq Assignment
 
 ## Description
 
