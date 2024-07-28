@@ -30,3 +30,8 @@ docker compose up -d --build
 
 - email: admin@admin.com
 - password: admin
+
+### Todo
+
+- email integration
+- frontend error messages and validations
