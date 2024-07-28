@@ -1,15 +1,32 @@
+# Project Title
+
 TicketSouq Assignment
 
-To start the application
-run docker compose up -d --build
+## Description
 
-This will build and start the four services
+User Admin Platform.
 
-1. Frontend nextjs http://localhost:3000/
-2. API nestjs http://localhost:3333/
-3. Postgres Database
-4. Redis service.
+## Getting Started
 
-Admin User Credentials
-email : admin@admin.com
-password: admin
+Project includes four services:
+
+1. API -> nestjs http://localhost:3333
+2. Frontend -> nextjs http://localhost:3000/
+3. Email Notification Pub/Sub -> Redis
+4. Postgres db
+
+### Executing program
+
+- Clone this repo
+- run the following command:
+
+```
+docker compose up -d --build
+```
+
+- Go to http://localhost:3000/
+
+### Admin Credentials
+
+- email: admin@admin.com
+- password: admin
