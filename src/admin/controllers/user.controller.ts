@@ -10,7 +10,8 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from '../services/user.service';
-import { Role } from '@prisma/client';
+// import { Role } from '@prisma/client';
+import { Role } from 'src/enums/role.enum';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/decorator/roles.decorator';
 import { CreateUserDto, UpdateUserDto } from './dto/admin.dto';
